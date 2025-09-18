@@ -1,0 +1,23 @@
+{
+  "name": "dependabot-test-vulns",
+  "version": "0.0.1",
+  "description": "Test project with intentionally outdated dependencies for Dependabot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node -e \"console.log('test')\""
+  },
+  "author": "test",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "4.17.15",
+    "serialize-javascript": "1.4.0",
+    "axios": "0.19.0",
+    "minimist": "0.0.8",
+    "ws": "3.3.3"
+  },
+  "devDependencies": {
+    "mocha": "5.2.0",
+    "yargs": "8.0.2"
+  }
+}
