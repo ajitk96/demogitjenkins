@@ -1,21 +1,32 @@
+# py_high_risk.py
 import sqlite3
 import os
+import pickle
 
-def vulnerable_login(username, password):
-    # ❌ SQL Injection vulnerability
-    conn = sqlite3.connect("users.db")
-    cursor = conn.cursor()
-    query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
-    cursor.execute(query)  # CodeQL will flag this
-    result = cursor.fetchall()
+# Hardcoded credentials (secrets exposed)
+DB_PASSWORD = "supersecretpassword"
+
+def sql_injection(username, password):
+    # ❌ SQL Injection via string interpolation
+    conn = sqlite3.connect("test.db")
+    cur = conn.cursor()
+    q = f"SELECT * FROM users WHERE name='{username}' AND pass='{password}'"
+    cur.execute(q)
+    rows = cur.fetchall()
     conn.close()
-    return result
+    return rows
 
-def run_system_command(user_input):
-    # ❌ Command Injection vulnerability
-    os.system("echo " + user_input)  # CodeQL will flag this
+def command_injection(user_input):
+    # ❌ Command injection by concatenating user input
+    os.system("ping -c 1 " + user_input)
+
+def insecure_deserialize(data):
+    # ❌ Unsafe deserialization using pickle.loads on untrusted data
+    obj = pickle.loads(data)
+    return obj
 
 if __name__ == "__main__":
-    # Sample test calls
-    vulnerable_login("admin", "password123")
-    run_system_command("hello; rm -rf /")
+    # Example unsafe calls (do not run with real malicious input)
+    sql_injection("admin", "password")
+    command_injection("127.0.0.1")
+    insecure_deserialize(b"")  # intentionally left blank for scanner
